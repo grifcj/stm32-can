@@ -8,6 +8,10 @@
 
 CAN_HandleTypeDef hcan1 = {};
 
+#define MAX_CAN_DATA 8
+uint8_t txData[MAX_CAN_DATA] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+uint8_t rxData[MAX_CAN_DATA] = {};
+
 static void CAN_Init(void)
 {
    // Initialize CAN module
@@ -50,6 +54,16 @@ static void CAN_Init(void)
    {
       SystemHalt("HAL_CAN_Start Error");
    }
+
+   if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)
+   {
+      SystemHalt("HAL_CAN_ActivateNotification Error");
+   }
+
+   /*##-3- Configure the NVIC #################################################*/
+   /* NVIC configuration for CAN1 Reception complete interrupt */
+   HAL_NVIC_SetPriority(CAN1_RX0_IRQn, 1, 0);
+   HAL_NVIC_EnableIRQ(CAN1_RX0_IRQn);
 }
 
 void InitHardware()
@@ -71,42 +85,39 @@ void InitHardware()
    BSP_PB_Init(BUTTON_TAMPER, BUTTON_MODE_GPIO);
 }
 
-void TransmitMessageAndExpectLoopbackEcho()
+void TransmitMessage()
 {
    static int counter = 0;
 
    printf("Send CAN message count=%d\n", counter++);
 
-#define MAX_CAN_DATA 8
-   uint8_t txData[MAX_CAN_DATA] = { 1, 2, 3, 4, 5, 6, 7, 8 };
-
    CAN_TxHeaderTypeDef txHeader;
    txHeader.StdId = 0x321;
-   txHeader.ExtId = 0x01;
    txHeader.RTR = CAN_RTR_DATA;
    txHeader.IDE = CAN_ID_STD;
-   txHeader.DLC = 2;
+   txHeader.DLC = MAX_CAN_DATA;
    txHeader.TransmitGlobalTime = DISABLE;
    uint32_t txMailbox = 0;
    if (HAL_CAN_AddTxMessage(&hcan1, &txHeader, txData, &txMailbox) != HAL_OK)
    {
       Log("HAL_CAN_AddTxMessage Error");
    }
+}
 
-   while (HAL_CAN_GetRxFifoFillLevel(&hcan1, CAN_RX_FIFO0) == 0)
-   {
-   }
-
-   uint8_t rxData[MAX_CAN_DATA] = {};
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
+{
    CAN_RxHeaderTypeDef rxHeader = {};
-   if (HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &rxHeader, rxData) != HAL_OK)
+   if (HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rxHeader, rxData) != HAL_OK)
    {
-      Log("HAL_CAN_GetRxMessage Error");
+      SystemHalt("HAL_CAN_GetRxMessage Error");
    }
 
    Log("Received CAN message");
 
-   if (memcmp(txData, rxData, MAX_CAN_DATA) == 0)
+   if ((rxHeader.StdId == 0x321)
+         && (rxHeader.RTR ==  CAN_RTR_DATA)
+         && (rxHeader.DLC == MAX_CAN_DATA)
+         && (memcmp(txData, rxData, MAX_CAN_DATA) == 0))
    {
       Log("Received data matches transmitted data");
    }
@@ -124,12 +135,12 @@ int main(void)
       // User presses tamper button to send message
       if (BSP_PB_GetState(BUTTON_TAMPER) == KEY_PRESSED)
       {
-         TransmitMessageAndExpectLoopbackEcho();
-      }
+         // Wait until button released before continuing
+         while (BSP_PB_GetState(BUTTON_TAMPER) != KEY_RELEASED)
+         {
+         }
 
-      // Wait until button released before continuing
-      while (BSP_PB_GetState(BUTTON_TAMPER) != KEY_RELEASED)
-      {
+         TransmitMessage();
       }
    }
 }

@@ -1,4 +1,4 @@
-$bin ?= @build/CANLoopbackInterrupt
+$bin ?= @build/loopback_interrupt
 
 mach create
 machine LoadPlatformDescription @platform.repl
@@ -16,8 +16,6 @@ macro sendCan
    sleep 0.1
    sysbus.gpioPortC.TamperButton Release
 """
-
-sysbus.gpioPortC.TamperButton Release
 
 runMacro $reset
 start

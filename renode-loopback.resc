@@ -13,7 +13,7 @@ macro reset
 macro sendCan
 """
    sysbus.gpioPortC.TamperButton Press
-   sleep 0.5
+   sleep 0.1
    sysbus.gpioPortC.TamperButton Release
 """
 

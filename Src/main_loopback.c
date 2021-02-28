@@ -82,10 +82,9 @@ void TransmitMessageAndExpectLoopbackEcho()
 
    CAN_TxHeaderTypeDef txHeader;
    txHeader.StdId = 0x321;
-   txHeader.ExtId = 0x01;
    txHeader.RTR = CAN_RTR_DATA;
    txHeader.IDE = CAN_ID_STD;
-   txHeader.DLC = 2;
+   txHeader.DLC = MAX_CAN_DATA;
    txHeader.TransmitGlobalTime = DISABLE;
    uint32_t txMailbox = 0;
    if (HAL_CAN_AddTxMessage(&hcan1, &txHeader, txData, &txMailbox) != HAL_OK)
@@ -97,8 +96,8 @@ void TransmitMessageAndExpectLoopbackEcho()
    {
    }
 
-   uint8_t rxData[MAX_CAN_DATA] = {};
    CAN_RxHeaderTypeDef rxHeader = {};
+   uint8_t rxData[MAX_CAN_DATA] = {};
    if (HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &rxHeader, rxData) != HAL_OK)
    {
       Log("HAL_CAN_GetRxMessage Error");
@@ -106,7 +105,10 @@ void TransmitMessageAndExpectLoopbackEcho()
 
    Log("Received CAN message");
 
-   if (memcmp(txData, rxData, MAX_CAN_DATA) == 0)
+   if ((rxHeader.StdId == 0x321)
+         && (rxHeader.RTR ==  CAN_RTR_DATA)
+         && (rxHeader.DLC == MAX_CAN_DATA)
+         && (memcmp(txData, rxData, MAX_CAN_DATA) == 0))
    {
       Log("Received data matches transmitted data");
    }
@@ -124,12 +126,12 @@ int main(void)
       // User presses tamper button to send message
       if (BSP_PB_GetState(BUTTON_TAMPER) == KEY_PRESSED)
       {
-         TransmitMessageAndExpectLoopbackEcho();
-      }
+         // Wait until button released before continuing
+         while (BSP_PB_GetState(BUTTON_TAMPER) != KEY_RELEASED)
+         {
+         }
 
-      // Wait until button released before continuing
-      while (BSP_PB_GetState(BUTTON_TAMPER) != KEY_RELEASED)
-      {
+         TransmitMessageAndExpectLoopbackEcho();
       }
    }
 }
