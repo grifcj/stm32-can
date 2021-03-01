@@ -8,6 +8,8 @@
 
 CAN_HandleTypeDef hcan1 = {};
 
+#define CAN_TEST_MSG_STDID 0x321
+
 #define MAX_CAN_DATA 8
 uint8_t txData[MAX_CAN_DATA] = { 1, 2, 3, 4, 5, 6, 7, 8 };
 uint8_t rxData[MAX_CAN_DATA] = {};
@@ -32,19 +34,17 @@ static void CAN_Init(void)
       SystemHalt("HAL_CAN_Init Error");
    }
 
-   // Set filter to do what?
-   // Are we configuring to only allow our message or ANY message to come through?
+   // Configure filter to match the transmitted message id
    CAN_FilterTypeDef filterConfig = {};
    filterConfig.FilterBank = 0;
-   filterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+   filterConfig.FilterMode = CAN_FILTERMODE_IDLIST;
    filterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
-   filterConfig.FilterIdHigh = 0x0000;
+   filterConfig.FilterIdHigh = CAN_TEST_MSG_STDID << 5;
    filterConfig.FilterIdLow = 0x0000;
    filterConfig.FilterMaskIdHigh = 0x0000;
    filterConfig.FilterMaskIdLow = 0x0000;
    filterConfig.FilterFIFOAssignment = CAN_RX_FIFO0;
    filterConfig.FilterActivation = ENABLE;
-   filterConfig.SlaveStartFilterBank = 14;
    if (HAL_CAN_ConfigFilter(&hcan1, &filterConfig) != HAL_OK)
    {
       SystemHalt("HAL_CAN_ConfigFilter Error");
@@ -92,7 +92,7 @@ void TransmitMessage()
    printf("Send CAN message count=%d\n", counter++);
 
    CAN_TxHeaderTypeDef txHeader;
-   txHeader.StdId = 0x321;
+   txHeader.StdId = CAN_TEST_MSG_STDID;
    txHeader.RTR = CAN_RTR_DATA;
    txHeader.IDE = CAN_ID_STD;
    txHeader.DLC = MAX_CAN_DATA;
