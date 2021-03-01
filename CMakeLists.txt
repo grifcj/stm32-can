@@ -109,4 +109,5 @@ endfunction()
 
 DefineExe(loopback Src/main_loopback.c)
 DefineExe(loopback_interrupt Src/main_loopback_interrupt.c)
+DefineExe(interrupt Src/main_interrupt.c)
 

@@ -1,0 +1,49 @@
+$bin ?= @build/interrupt
+
+macro resetMachine
+"""
+   sysbus LoadELF $bin
+   sysbus.cpu VectorTableOffset 0x8000000
+"""
+
+macro reset
+"""
+   mach set 0
+   runMacro $resetMachine
+   mach set 1
+   runMacro $resetMachine
+"""
+
+macro sendCan
+"""
+   sysbus.gpioPortC.TamperButton Press
+   sleep 0.2
+   sysbus.gpioPortC.TamperButton Release
+"""
+
+macro createMachine
+"""
+   mach create
+   machine LoadPlatformDescription @platform.repl
+   showAnalyzer sysbus.uart1
+   connector Connect sysbus.can0 can
+"""
+
+emulation CreateCANHub "can"
+
+runMacro $createMachine
+runMacro $createMachine
+
+emulation SetGlobalQuantum "0.01"
+emulation SetGlobalAdvanceImmediately True
+
+runMacro $reset
+start
+sleep 0.5
+
+# Should be machine 1 sending message that machine 2 receives
+runMacro $sendCan
+sleep 0.5
+runMacro $sendCan
+sleep 0.5
+runMacro $sendCan
