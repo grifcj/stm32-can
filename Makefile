@@ -1,5 +1,5 @@
 # Define options persistently in options file
-include options.mk
+-include options.mk
 
 TOOLCHAIN_DIR ?= ${HOME}/toolchains/gcc-arm-none-eabi-10-2020-q4-major/bin
 BUILD_DIR ?= build
