@@ -21,9 +21,8 @@ Major tools/resources and their versions used while testing
 The example assumes the use of [GNU RM
 toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm)
 and directly uses resources from STM32CubeF4 package (V1.25.2). The cube
-resources have been imported directly into source build so it is
-self-contained. The build is targeting the STM324xG_EVAL development board with
-a STM32F407 MCU.
+resources have been imported directly into this repo, so no need to grab it seperately. 
+build is targeting the STM324xG_EVAL development board with a STM32F407 MCU.
 
 # Build Embedded Binaries
 The build is CMake based. A simple make wrapper with clean and build target is
@@ -53,7 +52,7 @@ BUILD_DIR ?= /path/to/build/dir
 Building Renode is documented
 [here](https://renode.readthedocs.io/en/latest/advanced/building_from_sources.html).
 
-Our changes to Renode are only in the infrastracture submodule. Recursively clone our
+The fixes for CAN in Renode are only in the infrastracture submodule. Recursively clone our
 [fork](https://github.com/grifcj/renode.git) of Renode, which will pull down the custom infrastructure module.
 
 It can be built according to normal instructions, which for linux is simply
