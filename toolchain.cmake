@@ -1,18 +1,12 @@
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR cortex-m4)
 
-if (NOT EXISTS $ENV{TOOLCHAIN_DIR})
-   message(FATAL_ERROR "TOOLCHAIN_DIR must be specified")
-else()
-   set(TOOLCHAIN_DIR $ENV{TOOLCHAIN_DIR})
-endif()
-
-find_program(CMAKE_C_COMPILER ${TOOLCHAIN_DIR}/bin/arm-none-eabi-gcc)
+find_program(CMAKE_C_COMPILER arm-none-eabi-gcc)
 if (NOT CMAKE_C_COMPILER)
    message(FATAL_ERROR "Can't find C compiler")
 endif()
 
-find_program(CMAKE_CXX_COMPILER ${TOOLCHAIN_DIR}/bin/arm-none-eabi-g++)
+find_program(CMAKE_CXX_COMPILER arm-none-eabi-g++)
 if (NOT CMAKE_CXX_COMPILER)
    message(FATAL_ERROR "Can't find C++ compiler")
 endif()
