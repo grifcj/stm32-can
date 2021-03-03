@@ -22,7 +22,7 @@ The example assumes the use of [GNU RM
 toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm)
 and directly uses resources from STM32CubeF4 package (V1.25.2). The cube
 resources have been imported directly into this repo, so no need to grab it seperately. 
-build is targeting the STM324xG_EVAL development board with a STM32F407 MCU.
+The build is targeting the STM324xG_EVAL development board with a STM32F407 MCU.
 
 # Build Embedded Binaries
 The build is CMake based. A simple make wrapper with clean and build target is
