@@ -1,15 +1,14 @@
 # Overview
-This repo contains code for testing CAN functionality with Renode. See below
-for instructions on building embedded binaries.
+This repo contains code for testing CAN functionality with Renode.
 
-At time of this writing, STMCAN peripheral and CANHub has some minor errors
+Currently, the STMCAN peripheral and CANHub provided with Renode have some minor errors
 which cause Renode to crash. Instructions to build custom renode are provided.
 
-Once you have binaries and custom renode, then the test scripts can be
-executed.
+Once you have embedded binaries and custom renode, then the renode scripts can be
+executed which demonstrate CAN communication.
 
 ### Tool versions
-For reference, the major tools/resources and their versions
+Major tools/resources and their versions used while testing
 
 * ubuntu 20.04
 * make 4.2.1
