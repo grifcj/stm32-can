@@ -47,17 +47,34 @@ create an options file in root directory.
 > cat options.mk
 TOOLCHAIN_DIR ?= /path/to/gnu/rm/toolchain
 BUILD_DIR ?= /path/to/build/dir
+> make build
 ```
 
 # Build Renode
 Building Renode is documented
 [here](https://renode.readthedocs.io/en/latest/advanced/building_from_sources.html).
 
-Our changes to Renode are only in the infrastracture submodule. Clone our
-[fork]() of Renode, which will pull down the custom infrastructure module. It can be built
-according to normal instructions, i.e. just execute `./build.sh`.
+Our changes to Renode are only in the infrastracture submodule. Recursively clone our
+[fork](https://github.com/grifcj/renode.git) of Renode, which will pull down the custom infrastructure module.
 
-To run the custom renode, mono will be required.
-mono
+It can be built according to normal instructions, which for linux is simply
+executing `./build.sh`.
 
-# Debugging Renode
+```
+> git clone --recursive https://github.com/grifcj/renode.git /path/to/renode/src
+> cd /path/to/renode/src
+> ./build.sh
+```
+
+# Run Renode
+
+Assuming one has built renode and the embedded binaries, and we are in this
+directory, examples can be run like so.
+```
+# Example two machines communicating over can hub with interrupts
+> mono /path/to/renode/output/bin/Release/Renode.exe renode-interrupt.resc
+# Example one machines in loopback with polling
+> mono /path/to/renode/output/bin/Release/Renode.exe renode-loopback.resc
+# Example one machines in loopback with interrupts
+> mono /path/to/renode/output/bin/Release/Renode.exe renode-loopback-interrupt.resc
+```
