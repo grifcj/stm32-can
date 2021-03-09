@@ -1,0 +1,41 @@
+$bin ?= @build/interrupt
+
+macro resetMachine
+"""
+   sysbus LoadELF $bin
+   sysbus.cpu VectorTableOffset 0x8000000
+"""
+
+macro reset
+"""
+   mach set 0; runMacro $resetMachine
+   mach set 1; runMacro $resetMachine
+   mach set 2; runMacro $resetMachine
+"""
+
+macro initMachine
+"""
+   machine LoadPlatformDescription @platform.repl
+   showAnalyzer sysbus.uart1
+   connector Connect sysbus.can0 can
+"""
+
+macro sendCANMessage
+"""
+   sysbus.gpioPortC.TamperButton Press
+   sleep 0.2
+   sysbus.gpioPortC.TamperButton Release
+"""
+
+emulation CreateCANHub "can"
+
+mach create "sender"
+runMacro $initMachine
+
+mach create "receiver1"
+runMacro $initMachine
+
+mach create "receiver2"
+runMacro $initMachine
+
+runMacro $reset

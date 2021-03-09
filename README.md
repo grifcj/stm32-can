@@ -68,11 +68,35 @@ executing `./build.sh`.
 
 Assuming one has built renode and the embedded binaries, and we are in this
 directory, examples can be run like so.
+
+Assume renode has been checked out and built in `~/src/renode`
+
 ```
-# Example two machines communicating over can hub with interrupts
-> mono /path/to/renode/output/bin/Release/Renode.exe renode-interrupt.resc
 # Example one machines in loopback with polling
-> mono /path/to/renode/output/bin/Release/Renode.exe renode-loopback.resc
+mono ~/src/renode/output/bin/Release/Renode.exe \
+    -e 'include @renode-loopback.resc' \
+    -e 'start' \
+    -e 'runMacro $sendCANMessage'
+
 # Example one machines in loopback with interrupts
-> mono /path/to/renode/output/bin/Release/Renode.exe renode-loopback-interrupt.resc
+mono ~/src/renode/output/bin/Release/Renode.exe \
+    -e 'set bin @build/loopback_interrupt' \
+    -e 'include @renode-loopback.resc' \
+    -e 'start' \
+    -e 'runMacro $sendCANMessage'
+
+# Example two machines communicating over can hub with interrupts
+mono ~/src/renode/output/bin/Release/Renode.exe \
+    -e 'include @renode-canhub.resc' \
+    -e 'start' \
+    -e 'runMacro $sendCANMessage'
+```
+
+# Run Robot Tests
+Again, assume renode has been checked out and built in `~/src/renode`
+
+```
+renode-test --robot-framework-remote-server-full-directory \
+    ~/src/renode/output/bin/Release \
+    tests.robot
 ```

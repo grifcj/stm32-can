@@ -1,6 +1,6 @@
 $bin ?= @build/loopback
 
-mach create
+mach create "sender"
 machine LoadPlatformDescription @platform.repl
 showAnalyzer sysbus.uart1
 
@@ -10,16 +10,11 @@ macro reset
    sysbus.cpu VectorTableOffset 0x8000000
 """
 
-macro sendCan
+macro sendCANMessage
 """
    sysbus.gpioPortC.TamperButton Press
-   sleep 0.1
+   sleep 0.2
    sysbus.gpioPortC.TamperButton Release
 """
 
 runMacro $reset
-start
-
-runMacro $sendCan
-runMacro $sendCan
-runMacro $sendCan
