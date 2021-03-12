@@ -1,8 +1,6 @@
 #include "main.h"
 #include "common.h"
 
-#include "stm32f4xx_it.h"
-
 void NMI_Handler(void) { SystemHalt("NMI"); }
 void HardFault_Handler(void) { SystemHalt("Hardfault"); }
 void MemManage_Handler(void) { SystemHalt("MemManage"); }
