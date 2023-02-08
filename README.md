@@ -10,12 +10,11 @@ executed which demonstrate CAN communication.
 ### Tool versions
 Major tools/resources and their versions used while testing
 
-* ubuntu 20.04
-* make 4.2.1
-* cmake 3.17.2
-* gcc-arm-none-eabi 10-2020-q4-major
-* mono 6.12.0.122
-* monodevelop 7.8.4 (build2)
+* ubuntu 22.04
+* make 4.3
+* cmake 3.22.1
+* gcc-arm-none-eabi 10.3.1 20210621
+* mono 6.12.0.182
 
 # Cross compiler and BSP
 The example assumes the use of [GNU RM
