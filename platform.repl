@@ -17,11 +17,6 @@ flashACR: Python.PythonPeripheral @ sysbus 0x40023C00
     initable: true
     script: "request.value = (5 << 0) | (1 << 9) | (1 << 8)"
 
-pwrCR: Python.PythonPeripheral @ sysbus 0x40007000
-    size: 0x4
-    initable: true
-    script: "request.value = 0x4000"
-
 syscfg: Python.PythonPeripheral @ sysbus 0x40013808
     size: 0x4
     initable: true
