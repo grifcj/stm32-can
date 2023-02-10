@@ -17,7 +17,7 @@ uint8_t rxData[MAX_CAN_DATA] = {};
 static void CAN_Init(void)
 {
    // Initialize CAN module
-   hcan1.Instance = CAN1;
+   hcan1.Instance = CAN2;
    hcan1.Init.TimeTriggeredMode = DISABLE;
    hcan1.Init.AutoBusOff = DISABLE;
    hcan1.Init.AutoWakeUp = DISABLE;
@@ -61,9 +61,9 @@ static void CAN_Init(void)
    }
 
    /*##-3- Configure the NVIC #################################################*/
-   /* NVIC configuration for CAN1 Reception complete interrupt */
-   HAL_NVIC_SetPriority(CAN1_RX0_IRQn, 1, 0);
-   HAL_NVIC_EnableIRQ(CAN1_RX0_IRQn);
+   /* NVIC configuration for CAN2 Reception complete interrupt */
+   HAL_NVIC_SetPriority(CAN2_RX0_IRQn, 1, 0);
+   HAL_NVIC_EnableIRQ(CAN2_RX0_IRQn);
 }
 
 void InitHardware()

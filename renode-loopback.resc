@@ -2,7 +2,7 @@ $bin ?= @build/loopback
 
 mach create "sender"
 machine LoadPlatformDescription @platform.repl
-showAnalyzer sysbus.uart1
+showAnalyzer sysbus.uart4
 
 macro reset
 """

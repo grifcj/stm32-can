@@ -17,7 +17,7 @@ macro initMachine
 """
    machine LoadPlatformDescription @platform.repl
    showAnalyzer sysbus.uart4
-   connector Connect sysbus.can1 can
+   connector Connect sysbus.can2 can
 """
 
 macro sendCANMessage
