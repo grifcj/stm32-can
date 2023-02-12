@@ -45,6 +45,7 @@ static void CAN_Init(void)
    filterConfig.FilterMaskIdLow = 0x0000;
    filterConfig.FilterFIFOAssignment = CAN_RX_FIFO0;
    filterConfig.FilterActivation = ENABLE;
+   filterConfig.SlaveStartFilterBank = 27;
    if (HAL_CAN_ConfigFilter(&hcan1, &filterConfig) != HAL_OK)
    {
       SystemHalt("HAL_CAN_ConfigFilter Error");

@@ -12,16 +12,6 @@ gpioPortI: GPIOPort.STM32F4GPIOPort @ sysbus <0x40022000, +0x400>
 nvic:
     systickFrequency: 168000000
 
-flashACR: Python.PythonPeripheral @ sysbus 0x40023C00
-    size: 0x4
-    initable: true
-    script: "request.value = (5 << 0) | (1 << 9) | (1 << 8)"
-
-pwrCR: Python.PythonPeripheral @ sysbus 0x40007000
-    size: 0x4
-    initable: true
-    script: "request.value = 0x4000"
-
 syscfg: Python.PythonPeripheral @ sysbus 0x40013808
     size: 0x4
     initable: true
@@ -47,3 +37,8 @@ KeyButton: Miscellaneous.Button @ gpioPortG
 
 TamperButton: Miscellaneous.Button @ gpioPortC
     -> gpioPortC@13
+
+sysbus:
+    init:
+        Tag <0x40007000, 0x40007004> "PWR_CR" 0x00004000
+

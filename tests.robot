@@ -24,7 +24,7 @@ Polling loopback can send and receive message
     Execute Command         set bin @build/loopback
     Execute Command         include @renode-loopback.resc
 
-    ${tester} =  Create Terminal Tester  sysbus.uart1
+    ${tester} =  Create Terminal Tester  sysbus.usart1
 
     Start Emulation
 
@@ -35,7 +35,7 @@ Interrupt loopback can send and receive message
     Execute Command         set bin @build/loopback_interrupt
     Execute Command         include @renode-loopback.resc
 
-    ${tester} =  Create Terminal Tester  sysbus.uart1
+    ${tester} =  Create Terminal Tester  sysbus.usart1
 
     Start Emulation
 
@@ -46,8 +46,8 @@ Two controllers can communicate across CANHub
     Execute Command         set bin @build/interrupt
     Execute Command         include @renode-canhub.resc
 
-    ${tester1} =  Create Terminal Tester  sysbus.uart1  machine=receiver1
-    ${tester2} =  Create Terminal Tester  sysbus.uart1  machine=receiver2
+    ${tester1} =  Create Terminal Tester  sysbus.usart1  machine=receiver1
+    ${tester2} =  Create Terminal Tester  sysbus.usart1  machine=receiver2
 
     Start Emulation
 

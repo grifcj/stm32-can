@@ -16,8 +16,10 @@ macro reset
 macro initMachine
 """
    machine LoadPlatformDescription @platform.repl
-   showAnalyzer sysbus.uart1
-   connector Connect sysbus.can0 can
+   showAnalyzer sysbus.usart1
+   connector Connect sysbus.can1 can
+   # logLevel -1 sysbus.can1
+   # sysbus LogPeripheralAccess sysbus.can1
 """
 
 macro sendCANMessage
@@ -39,3 +41,4 @@ mach create "receiver2"
 runMacro $initMachine
 
 runMacro $reset
+mach set "sender"

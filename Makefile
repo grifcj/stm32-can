@@ -1,7 +1,7 @@
 # Define options persistently in options file
 -include options.mk
 
-TOOLCHAIN_DIR ?= ${HOME}/toolchains/gcc-arm-none-eabi-10-2020-q4-major/bin
+TOOLCHAIN_DIR ?= ${HOME}/toolchains/gcc-arm-none-eabi-10.3-2021.10/bin
 BUILD_DIR ?= build
 
 export PATH := ${PATH}:${TOOLCHAIN_DIR}

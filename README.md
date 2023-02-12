@@ -1,27 +1,31 @@
 # Overview
 This repo contains code for testing CAN functionality with Renode.
 
-Currently, the STMCAN peripheral and CANHub provided with Renode have some minor errors
-which cause Renode to crash. Instructions to build custom renode are provided.
+---
+**NOTE**
 
-Once you have embedded binaries and custom renode, then the renode scripts can be
-executed which demonstrate CAN communication.
+These examples haven't been tested on real hardware. Though they may
+demonstrate CAN communication in Renode, there may be issues when run on actual
+devices.
+
+---
 
 ### Tool versions
 Major tools/resources and their versions used while testing
 
 * ubuntu 20.04
 * make 4.2.1
-* cmake 3.17.2
-* gcc-arm-none-eabi 10-2020-q4-major
-* mono 6.12.0.122
-* monodevelop 7.8.4 (build2)
+* cmake 3.22.1
+* gcc-arm-none-eabi 10.3-2021.10
+* mono 6.12.0.182
+* renode 1.13.2
+* vscode 1.75.1 (For developing Renode)
 
 # Cross compiler and BSP
 The example assumes the use of [GNU RM
 toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm)
 and directly uses resources from STM32CubeF4 package (V1.25.2). The cube
-resources have been imported directly into this repo, so no need to grab it seperately. 
+resources have been imported directly into this repo, so no need to grab it separately.
 The build is targeting the STM324xG_EVAL development board with a STM32F407 MCU.
 
 # Build Embedded Binaries
@@ -31,12 +35,12 @@ provided for convenience.
 To build the embedded binaries, the crosscompiler must be on the path. Either
 modify path or set via option to make.
 ```
-> export PATH=~/toolchains/gcc-arm-none-eabi-10-2020-q4-major/bin:$PATH
+> export PATH=~/toolchains/gcc-arm-none-eabi-10.3-2021.10/bin:$PATH
 > make build
 ```
 or
 ```
-> TOOLCHAIN_DIR=~/toolchains/gcc-arm-none-eabi-10-2020-q4-major/bin make build
+> TOOLCHAIN_DIR=~/toolchains/gcc-arm-none-eabi-10.3-2021.10/bin make build
 ```
 
 Options can be set via command line or persistently via options file. Just
@@ -48,55 +52,47 @@ BUILD_DIR ?= /path/to/build/dir
 > make build
 ```
 
+# Install Renode
+
+Releases can be obtained [here](https://github.com/renode/renode).
+
 # Build Renode
+
 Building Renode is documented
 [here](https://renode.readthedocs.io/en/latest/advanced/building_from_sources.html).
 
-The fixes for CAN in Renode are only in the infrastracture submodule. Recursively clone our
-[fork](https://github.com/grifcj/renode.git) of Renode, which will pull down the custom infrastructure module.
+# Run Examples
 
-It can be built according to normal instructions, which for linux is simply
-executing `./build.sh`.
+Assume:
+1) Renode installed and on path
+2) CWD is root of stm32-can repo
 
-```
-> git clone --recursive https://github.com/grifcj/renode.git /path/to/renode/src
-> cd /path/to/renode/src
-> ./build.sh
-```
-
-# Run Renode
-
-Assuming one has built renode and the embedded binaries, and we are in this
-directory, examples can be run like so.
-
-Assume renode has been checked out and built in `~/src/renode`
+Examples can be run with following commands
 
 ```
-# Example one machines in loopback with polling
-mono ~/src/renode/output/bin/Release/Renode.exe \
+# One machine in loopback with polling
+renode \
     -e 'include @renode-loopback.resc' \
     -e 'start' \
     -e 'runMacro $sendCANMessage'
 
-# Example one machines in loopback with interrupts
-mono ~/src/renode/output/bin/Release/Renode.exe \
+# One machine in loopback with interrupts
+renode \
     -e 'set bin @build/loopback_interrupt' \
     -e 'include @renode-loopback.resc' \
     -e 'start' \
     -e 'runMacro $sendCANMessage'
 
-# Example two machines communicating over can hub with interrupts
-mono ~/src/renode/output/bin/Release/Renode.exe \
+# Three machines communicating over can hub with interrupts. One sends message,
+# two receive it.
+renode \
     -e 'include @renode-canhub.resc' \
     -e 'start' \
     -e 'runMacro $sendCANMessage'
 ```
 
 # Run Robot Tests
-Again, assume renode has been checked out and built in `~/src/renode`
 
 ```
-renode-test --robot-framework-remote-server-full-directory \
-    ~/src/renode/output/bin/Release \
-    tests.robot
+renode-test tests.robot
 ```
